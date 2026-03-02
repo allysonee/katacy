@@ -1,3 +1,5 @@
+import json
+import os
 import random
 import time
 import streamlit as st
@@ -316,6 +318,25 @@ QUESTIONS = {
     },
 }
 
+# ── Load expanded question banks from JSON files ───────────────────────────────
+_TOPIC_FILES = {
+    "Women Empowerment":    "questions_women_empowerment.json",
+    "Environment":          "questions_environment.json",
+    "Culture & Identity":   "questions_culture_identity.json",
+    "General Personality":  "questions_general_personality.json",
+    "Mental Health & Wellness": "questions_mental_health.json",
+    "Education":            "questions_education.json",
+    "Technology & Social Media": "questions_technology.json",
+    "Leadership & Service": "questions_leadership.json",
+    "Pageantry":            "questions_pageantry.json",
+    "Peace & Global Issues":"questions_peace.json",
+}
+_BASE = os.path.dirname(__file__)
+for _topic, _fname in _TOPIC_FILES.items():
+    _path = os.path.join(_BASE, _fname)
+    if os.path.exists(_path):
+        with open(_path) as _f:
+            QUESTIONS[_topic] = json.load(_f)
 
 # ── Session state defaults ─────────────────────────────────────────────────────
 if "question" not in st.session_state:

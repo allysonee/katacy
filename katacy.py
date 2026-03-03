@@ -27,7 +27,7 @@ def synthesize(text: str) -> bytes:
 
 # ── Question bank (fallback) ───────────────────────────────────────────────────
 QUESTIONS = {
-    "Women Empowerment": {
+    "Women": {
         "Easy": [
             "How do you personally define women's empowerment, and how do you live that definition every day?",
             "What advice would you give to a young girl who has been told she is 'too much' or 'not enough'?",
@@ -107,7 +107,7 @@ QUESTIONS = {
             "How do you want to be remembered, and are you living in a way that reflects that today?",
         ],
     },
-    "Mental Health & Wellness": {
+    "Mental Health": {
         "Easy": [
             "What does self-care mean to you beyond the surface level, and how do you practice it authentically?",
             "How has prioritizing your mental health made you a better person for those around you?",
@@ -167,7 +167,7 @@ QUESTIONS = {
             "How do we balance innovation and progress in technology with ethics and human dignity?",
         ],
     },
-    "Leadership & Service": {
+    "Leadership": {
         "Easy": [
             "What does servant leadership mean to you, and can you share a moment when you practiced it?",
             "How can young people start making an impact in their communities right now, without waiting until they are older?",
@@ -227,6 +227,20 @@ QUESTIONS = {
             "What does justice look like in a world where not everyone starts from the same place?",
         ],
     },
+    "LGBTQIA+": {
+        "Easy": [
+            "How do you define love, and why do you believe every person deserves to experience it freely?",
+            "What does inclusion mean to you in your everyday life?",
+        ],
+        "Medium": [
+            "What is the difference between tolerance and genuine acceptance, and why does that distinction matter?",
+            "How can allies move beyond passive support to active, meaningful advocacy?",
+        ],
+        "Hard": [
+            "What systemic changes would you prioritize to reduce the disproportionately high rates of homelessness among LGBTQIA+ youth?",
+            "What is the long-term cost to society when any group of people is systematically excluded from full participation in civic life?",
+        ],
+    },
     "Youth": {
         "Easy": [
             "What does it mean to be young in today's world, and how do you make the most of this chapter of your life?",
@@ -251,17 +265,18 @@ QUESTIONS = {
 
 # ── Load expanded question banks from JSON files ───────────────────────────────
 _TOPIC_FILES = {
-    "Women Empowerment":        "questions_women_empowerment.json",
+    "Women":        "questions_women_empowerment.json",
     "Environment":              "questions_environment.json",
     "Culture & Identity":       "questions_culture_identity.json",
     "General Personality":      "questions_general_personality.json",
-    "Mental Health & Wellness": "questions_mental_health.json",
+    "Mental Health": "questions_mental_health.json",
     "Education":                "questions_education.json",
     "Technology & Social Media":"questions_technology.json",
-    "Leadership & Service":     "questions_leadership.json",
+    "Leadership":     "questions_leadership.json",
     "Pageantry":                "questions_pageantry.json",
     "Peace & Global Issues":    "questions_peace.json",
     "Youth":                    "questions_youth.json",
+    "LGBTQIA+":                 "questions_lgbtq.json",
 }
 _BASE = os.path.dirname(__file__)
 for _topic, _fname in _TOPIC_FILES.items():

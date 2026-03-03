@@ -33,17 +33,6 @@ st.set_page_config(
 )
 
 # ── Styles ─────────────────────────────────────────────────────────────────────
-components.html("""
-<script>
-(function() {
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500&display=swap';
-    window.parent.document.head.appendChild(link);
-})();
-</script>
-""", height=0)
-
 st.markdown(
     """
     <style>
@@ -51,7 +40,6 @@ st.markdown(
     html, body, [data-testid="stApp"] {
         background-color: #FDF5F8;
         color: #1C1030;
-        font-family: 'Outfit', sans-serif;
     }
 
     #MainMenu, footer, header { visibility: hidden; }
@@ -63,7 +51,7 @@ st.markdown(
     }
 
     h1 {
-        font-family: 'Urbanist', sans-serif;
+
         font-size: 2rem;
         font-weight: 700;
         text-align: center;
@@ -93,7 +81,7 @@ st.markdown(
     }
 
     .question-card p {
-        font-family: 'Outfit', sans-serif;
+
         font-size: 1.3rem;
         font-weight: 300;
         line-height: 1.85;
@@ -107,7 +95,7 @@ st.markdown(
         text-align: center;
         font-size: 3.8rem;
         font-weight: 700;
-        font-family: 'Urbanist', sans-serif;
+
         letter-spacing: -0.04em;
         padding: 0.5rem 0;
     }
@@ -132,7 +120,7 @@ st.markdown(
         font-weight: 600;
         width: 100%;
         letter-spacing: 0.01em;
-        font-family: 'Urbanist', sans-serif;
+
         transition: background 0.2s;
         box-shadow: 0 2px 16px rgba(28, 16, 48, 0.18);
     }
@@ -147,7 +135,7 @@ st.markdown(
         color: #B87A94 !important;
         font-size: 0.8rem;
         letter-spacing: 0.05em;
-        font-family: 'Outfit', sans-serif !important;
+
     }
 
     /* Toggle */
@@ -174,7 +162,7 @@ st.markdown(
     }
     [data-testid="stCheckbox"] span {
         color: #1C1030 !important;
-        font-family: 'Outfit', sans-serif !important;
+
         font-size: 0.9rem !important;
     }
     </style>
@@ -536,7 +524,7 @@ if st.session_state.question:
             height: 100%; background: #E0A0B8;
             border-radius: 999px; width: 0%;
           }}
-          #time {{ font-size: 0.75rem; color: #B87A94; white-space: nowrap; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; }}
+          #time {{ font-size: 0.75rem; color: #B87A94; white-space: nowrap; font-family: 'Comic Sans MS', cursive !important; letter-spacing: 0.02em; }}
         </style>
         <div class="player">
           <button id="btn">▶</button>

@@ -33,10 +33,16 @@ st.set_page_config(
 )
 
 # ── Styles ─────────────────────────────────────────────────────────────────────
-st.markdown(
-    '<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">',
-    unsafe_allow_html=True,
-)
+components.html("""
+<script>
+(function() {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500&display=swap';
+    window.parent.document.head.appendChild(link);
+})();
+</script>
+""", height=0)
 
 st.markdown(
     """

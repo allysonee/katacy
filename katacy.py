@@ -2,27 +2,38 @@ import asyncio
 import io
 import json
 import os
+import queue
 import random
+import threading
 
 import edge_tts
 from flask import Flask, jsonify, render_template, request, Response
-from mutagen.mp3 import MP3
 
 app = Flask(__name__)
 
-# ── TTS ────────────────────────────────────────────────────────────────────────
+# ── TTS streaming ──────────────────────────────────────────────────────────────
 
-async def _synthesize(text: str) -> bytes:
-    communicate = edge_tts.Communicate(text, voice="en-US-EmmaNeural", rate="-8%")
-    buf = io.BytesIO()
-    async for chunk in communicate.stream():
-        if chunk["type"] == "audio":
-            buf.write(chunk["data"])
-    return buf.getvalue()
+def stream_tts(text: str):
+    """Yield MP3 audio chunks as they arrive from edge-tts."""
+    chunk_queue = queue.Queue()
 
+    def run():
+        async def _run():
+            communicate = edge_tts.Communicate(text, voice="en-US-EmmaNeural", rate="-8%")
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    chunk_queue.put(chunk["data"])
+            chunk_queue.put(None)
+        asyncio.run(_run())
 
-def synthesize(text: str) -> bytes:
-    return asyncio.run(_synthesize(text))
+    t = threading.Thread(target=run, daemon=True)
+    t.start()
+
+    while True:
+        chunk = chunk_queue.get()
+        if chunk is None:
+            break
+        yield chunk
 
 
 # ── Question bank (fallback) ───────────────────────────────────────────────────
@@ -319,16 +330,14 @@ def question():
     return jsonify({"question": random.choice(choices)})
 
 
-@app.route("/speak", methods=["POST"])
+@app.route("/speak")
 def speak():
-    data = request.get_json()
-    text = data.get("text", "").strip()
+    text = request.args.get("text", "").strip()
     if not text:
         return jsonify({"error": "No text provided."}), 400
 
-    audio = synthesize(text)
-    return Response(audio, mimetype="audio/mpeg")
+    return Response(stream_tts(text), mimetype="audio/mpeg")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8080)

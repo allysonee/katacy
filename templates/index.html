@@ -70,6 +70,22 @@
       line-height: 1;
     }
 
+    .beta-badge {
+      display: inline-block;
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blush);
+      border: 1px solid var(--blush);
+      border-radius: 999px;
+      padding: 0.15em 0.55em;
+      vertical-align: middle;
+      opacity: 0.7;
+      position: relative;
+      top: -2px;
+    }
+
     .sidebar-brand .tagline {
       font-size: 0.7rem;
       color: var(--blush);
@@ -342,6 +358,24 @@
       text-transform: uppercase;
       margin-top: 0.3rem;
     }
+    #timer-stop-btn {
+      margin-top: 1rem;
+      background: none;
+      border: 1.5px solid #C45C80;
+      color: #C45C80;
+      border-radius: 999px;
+      padding: 0.4em 1.5em;
+      font-family: 'Urbanist', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    #timer-stop-btn:hover {
+      background: #C45C80;
+      color: #fff;
+    }
 
     /* audio icons */
     .card-audio-icons {
@@ -557,6 +591,7 @@
     .dont-show-label input {
       accent-color: #888;
       cursor: pointer;
+      opacity: 0.4;
     }
 
     /* ── Mobile ── */
@@ -668,10 +703,6 @@
         <span class="step-num">3</span>
         <span>Hit <strong>Generate Question</strong> — then answer out loud before time runs out.</span>
       </li>
-      <li>
-        <span class="step-num">4</span>
-        <span>Keep going. Every question is a chance to get sharper.</span>
-      </li>
     </ul>
     <button class="btn-start" onclick="dismissWelcome()">Let's go</button>
     <label class="dont-show-label">
@@ -692,7 +723,7 @@
   <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <h1>✦ Katacy</h1>
+      <h1>✦ Katacy <span class="beta-badge">beta</span></h1>
       <div class="tagline">Pageant Q&A Practice</div>
       <button id="sidebar-close" onclick="closeDrawer()" style="display:none; position:absolute; top:1rem; right:1rem; background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.4rem; cursor:pointer; line-height:1; padding:4px;">✕</button>
     </div>
@@ -751,6 +782,13 @@
           <span class="toggle-label" style="font-size:0.75rem;opacity:0.6;">Mute bell</span>
           <label class="toggle-switch">
             <input type="checkbox" id="toggle-mute-bell" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="toggle-item" style="margin-top:0.6rem;margin-bottom:0;">
+          <span class="toggle-label" style="font-size:0.75rem;opacity:0.6;">Count over time</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-overtime" checked />
             <span class="toggle-track"></span>
           </label>
         </div>
@@ -822,6 +860,7 @@
     <div class="timer-block" id="timer-block">
       <div class="timer-display" id="timer-display">1:00</div>
       <div class="timer-sublabel">Time remaining</div>
+      <button id="timer-stop-btn" onclick="stopOvertime()" style="display:none;">Stop</button>
     </div>
 
   </main>
@@ -1004,16 +1043,34 @@
 
     let remaining = seconds;
 
+    const stopBtn = document.getElementById('timer-stop-btn');
+    const overtimeOn = document.getElementById('toggle-overtime').checked;
+
     timerInterval = setInterval(() => {
       remaining--;
 
       if (remaining <= 0) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        display.textContent = "TIME'S UP!";
-        display.style.color = '#C45C80';
-        sublabel.textContent = 'Great job — reset and go again';
-        playBell();
+        if (remaining === 0) {
+          playBell();
+          if (overtimeOn) {
+            display.style.color = '#C45C80';
+            sublabel.textContent = 'Over time';
+            stopBtn.style.display = 'inline-block';
+          }
+        }
+
+        if (!overtimeOn) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          display.textContent = "TIME'S UP!";
+          display.style.color = '#C45C80';
+          sublabel.textContent = 'Great job — reset and go again';
+          stopBtn.style.display = 'none';
+          return;
+        }
+
+        const over = Math.abs(remaining);
+        display.innerHTML = '<span style="font-size:0.4em;margin-right:0.2em;position:relative;top:-0.55em;">+</span>' + fmtTime(over);
         return;
       }
 
@@ -1023,6 +1080,16 @@
 
       display.textContent = fmtTime(remaining);
     }, 1000);
+  }
+
+  function stopOvertime() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    const block    = document.getElementById('timer-block');
+    const display  = document.getElementById('timer-display');
+    const sublabel = block.querySelector('.timer-sublabel');
+    const stopBtn  = document.getElementById('timer-stop-btn');
+    sublabel.textContent = 'Great job — reset and go again';
+    stopBtn.style.display = 'none';
   }
 
   // ── Audio (edge-tts streaming) ─────────────────────────────────────────────
@@ -1066,6 +1133,7 @@
 
     // stop any running timer / audio
     if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    document.getElementById('timer-stop-btn').style.display = 'none';
     audioEl.pause();
     audioEl.src = '';
     cardAudioIcons.classList.remove('visible');

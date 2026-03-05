@@ -302,20 +302,11 @@ TOPICS = list(QUESTIONS.keys())
 
 # ── Routes ─────────────────────────────────────────────────────────────────────
 
-def get_version():
-    # Use Render's built-in commit SHA env var, fallback to local git
-    sha = os.environ.get("RENDER_GIT_COMMIT", "")
-    if sha:
-        return sha[:7]
-    try:
-        import subprocess
-        return subprocess.check_output(
-            ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
-        ).decode().strip()
-    except Exception:
-        return "dev"
-
-VERSION = get_version()
+try:
+    with open(os.path.join(_BASE, "version.txt")) as _vf:
+        VERSION = _vf.read().strip()
+except Exception:
+    VERSION = "v0.1.0"
 
 @app.route("/")
 def index():

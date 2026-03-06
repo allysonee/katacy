@@ -6,6 +6,7 @@ Live at [katacy.com](https://katacy.com)
 
 ## Features
 
+- **8,000+ questions** — never run out of new questions as you prep
 - **12 topics** — Women, Environment, Culture & Identity, Mental Health, Education, Technology & Social Media, Leadership, Pageantry, Peace & Global Issues, Youth, LGBTQIA+, General Personality
 - **3 difficulty levels** — Easy, Medium, Hard
 - **Read aloud** — questions spoken via text-to-speech
